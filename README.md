@@ -24,10 +24,8 @@ export OCP_VERSION=4.7.4
 export GUID={GUID generated from opentlc}
 ```
 
-### Step 4: Login as Root and run preparation script
+### Step 4: run preparation script (no more sudo / root req'ment!)
 ```bash
-> sudo -i
-> cd ${HOME}/ocp4-at-opentlc/
 > ./prepare-openshift-installer.sh
 ```
 
@@ -39,11 +37,8 @@ Please exit the session and relogin again to enable the Bash completion.
 
 ```
 
-### Step 5: Relogin as Root and install ocp
+### Step 5: install ocp
 ```bash
-> exit
-> sudo -i
-> tmux new -s ocp_install
 > time openshift-install create cluster --dir $HOME/cluster-${GUID} --log-level debug
 ```
 
