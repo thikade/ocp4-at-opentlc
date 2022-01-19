@@ -1,0 +1,37 @@
+apiVersion: v1
+baseDomain: sandbox822.opentlc.com
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  platform:
+    aws:
+      type: m5.large
+  replicas: 2
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  platform:
+    aws:
+      type: m5.xlarge
+  replicas: 3
+metadata:
+  creationTimestamp: null
+  name: cluster-f44b
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 10.0.0.0/16
+  networkType: OVNKubernetes
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  aws:
+    region: us-east-2
+publish: External
+pullSecret: { "auths": { "cloud.openshift.com": { "auth": "", "email": "email@example.com" }, "quay.io": { "auth": "", "email": "email@example.com" }, "registry.connect.redhat.com": { "auth": "", "email": "email@example.com" }, "registry.redhat.io": { "auth": "", "email": "email@example.com" }, "utilityvm.53a0.internal:5000": { "auth": "", "email": "email@example.com" } } }
+sshKey: |
+  ssh-rsa AAAAB...  email@example.com

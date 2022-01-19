@@ -1,0 +1,73 @@
+apiVersion: machine.openshift.io/v1beta1
+kind: MachineSet
+metadata:
+  annotations:
+    machine.openshift.io/GPU: "0"
+    machine.openshift.io/memoryMb: "8192"
+    machine.openshift.io/vCPU: "2"
+  labels:
+    machine.openshift.io/cluster-api-cluster: cluster-f44b-r962f
+  name: infra
+  namespace: openshift-machine-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      machine.openshift.io/cluster-api-cluster: cluster-f44b-r962f
+      machine.openshift.io/cluster-api-machineset: infra
+  template:
+    metadata:
+      labels:
+        machine.openshift.io/cluster-api-cluster: cluster-f44b-r962f
+        machine.openshift.io/cluster-api-machine-role: worker
+        machine.openshift.io/cluster-api-machine-type: worker
+        machine.openshift.io/cluster-api-machineset: infra
+    spec:
+      metadata: 
+        labels:
+          node-role.kubernetes.io/infra: ""
+          providerSpec.value.placement.region: us-east-2
+          providerSpec.value.placement.availabilityZone: us-east-2a
+      taints: 
+        - key: node-role.kubernetes.io/infra
+          effect: NoSchedule
+      providerSpec:
+        value:
+          ami:
+            id: ami-03d9208319c96db0c
+          apiVersion: awsproviderconfig.openshift.io/v1beta1
+          blockDevices:
+          - ebs:
+              encrypted: true
+              iops: 0
+              kmsKey:
+                arn: ""
+              volumeSize: 120
+              volumeType: gp2
+          credentialsSecret:
+            name: aws-cloud-credentials
+          deviceIndex: 0
+          iamInstanceProfile:
+            id: cluster-f44b-r962f-worker-profile
+          instanceType: m5.xlarge
+          kind: AWSMachineProviderConfig
+          metadata:
+            creationTimestamp: null
+          placement:
+            availabilityZone: us-east-2a
+            region: us-east-2
+          securityGroups:
+          - filters:
+            - name: tag:Name
+              values:
+              - cluster-f44b-r962f-worker-sg
+          subnet:
+            filters:
+            - name: tag:Name
+              values:
+              - cluster-f44b-r962f-private-us-east-2a
+          tags:
+          - name: kubernetes.io/cluster/cluster-f44b-r962f
+            value: owned
+          userDataSecret:
+            name: worker-user-data
